@@ -1,65 +1,24 @@
 package com.osvaldo.newcheckoutarchpoc.presentation.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseMviViewModel
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseViewModel
 import com.osvaldo.newcheckoutarchpoc.core.abstractions.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.model.SandwichDomainModel
 import com.osvaldo.newcheckoutarchpoc.domain.useCase.CompletionUseCase
 import com.osvaldo.newcheckoutarchpoc.domain.useCase.SandwichUseCase
-import com.osvaldo.newcheckoutarchpoc.presentation.model.CondimentViewData
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
+import com.osvaldo.newcheckoutarchpoc.presentation.model.CondimentViewData
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class CondimentsViewModel(
     private val sandwichUseCase: SandwichUseCase,
     private val completionUseCase: CompletionUseCase
-) : BaseMviViewModel<CondimentsViewModel.ViewIntent, CondimentsViewModel.ViewState, CondimentsViewModel.ViewEffect>() {
+) : BaseViewModel<CondimentsViewModel.ViewIntent, CondimentsViewModel.ViewState, CondimentsViewModel.ViewEffect,
+        SandwichDomainModel>() {
 
     init {
-        setSandwichCollector()
-    }
-
-    private fun setSandwichCollector() = viewModelScope.launch {
-        sandwichUseCase.sandwich.collect { allTheInfo ->
-            splitTheSandwich(allTheInfo)
-        }
-    }
-
-    private fun splitTheSandwich(sandwich: GenericResultFlow<SandwichDomainModel>) {
-        when (sandwich) {
-            is GenericResultFlow.Error -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.ERROR,
-                            isDone = false
-                        )
-                    )
-                }
-            }
-
-            is GenericResultFlow.Loading -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.LOADING,
-                            isDone = false
-                        )
-                    )
-                }
-            }
-
-            is GenericResultFlow.Success -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.SUCCESS,
-                            condiment = sandwich.data.condiments ?: "",
-                        )
-                    )
-                }
-            }
-        }
+        setCollector()
     }
 
     override fun intent(intent: ViewIntent) {
@@ -87,8 +46,43 @@ class CondimentsViewModel(
         completionUseCase.updateCondimentReady(isDone)
     }
 
+    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+        sandwichUseCase.sandwich
+
 
     override fun initialState() = ViewState()
+    override fun domainError(error: Throwable?) {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.ERROR,
+                    isDone = false
+                )
+            )
+        }
+    }
+
+    override fun domainLoading() {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.LOADING,
+                    isDone = false
+                )
+            )
+        }
+    }
+
+    override fun domainSuccess(domainModel: SandwichDomainModel) {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.SUCCESS,
+                    condiment = domainModel.condiments ?: "",
+                )
+            )
+        }
+    }
 
     sealed class ViewIntent : BaseViewIntent {
         data class UpdateCondimentStatus(val isDone: Boolean) : ViewIntent()

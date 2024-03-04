@@ -1,7 +1,7 @@
 package com.osvaldo.newcheckoutarchpoc.presentation.viewModel
 
 import androidx.lifecycle.viewModelScope
-import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseMviViewModel
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseViewModel
 import com.osvaldo.newcheckoutarchpoc.core.abstractions.Factories
 import com.osvaldo.newcheckoutarchpoc.core.abstractions.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.model.SandwichDomainModel
@@ -9,57 +9,17 @@ import com.osvaldo.newcheckoutarchpoc.domain.useCase.CompletionUseCase
 import com.osvaldo.newcheckoutarchpoc.domain.useCase.SandwichUseCase
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
 import com.osvaldo.newcheckoutarchpoc.presentation.model.FishViewData
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class FishViewModel(
     private val sandwichUseCase: SandwichUseCase,
     private val completionUseCase: CompletionUseCase
-) : BaseMviViewModel<FishViewModel.ViewIntent, FishViewModel.ViewState, FishViewModel.ViewEffect>() {
+) : BaseViewModel<FishViewModel.ViewIntent, FishViewModel.ViewState, FishViewModel.ViewEffect,
+        SandwichDomainModel>() {
 
     init {
-        setSandwichCollector()
-    }
-
-    private fun setSandwichCollector() = viewModelScope.launch {
-        sandwichUseCase.sandwich.collect { allTheInfo ->
-            splitTheSandwich(allTheInfo)
-        }
-    }
-
-    private fun splitTheSandwich(sandwich: GenericResultFlow<SandwichDomainModel>) {
-        when (sandwich) {
-            is GenericResultFlow.Error -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.ERROR
-                        )
-                    )
-                }
-            }
-
-            is GenericResultFlow.Loading -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.LOADING
-                        )
-                    )
-                }
-            }
-
-            is GenericResultFlow.Success -> {
-                setState {
-                    copy(
-                        viewData = viewData.copy(
-                            componentState = ComponentState.SUCCESS,
-                            fish = sandwich.data.fish ?: "",
-                            isGrilled = Factories.booleanFactory.random(),
-                        )
-                    )
-                }
-            }
-        }
+        setCollector()
     }
 
     private fun updateFishStatus(done: Boolean) = viewModelScope.launch {
@@ -78,7 +38,41 @@ class FishViewModel(
 
     sealed class ViewEffect : BaseViewEffect
 
+    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+        sandwichUseCase.sandwich
+
     override fun initialState(): ViewState = ViewState()
+    override fun domainError(error: Throwable?) {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.ERROR
+                )
+            )
+        }
+    }
+
+    override fun domainLoading() {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.LOADING
+                )
+            )
+        }
+    }
+
+    override fun domainSuccess(domainModel: SandwichDomainModel) {
+        setState {
+            copy(
+                viewData = viewData.copy(
+                    componentState = ComponentState.SUCCESS,
+                    fish = domainModel.fish ?: "",
+                    isGrilled = Factories.booleanFactory.random(),
+                )
+            )
+        }
+    }
 
     override fun intent(intent: ViewIntent) {
         when (intent) {

@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseMviViewModel<
-        Intent : BaseMviViewModel.BaseViewIntent,
-        State : BaseMviViewModel.BaseViewState,
-        Effect : BaseMviViewModel.BaseViewEffect,
+abstract class BaseViewModel<
+        Intent : BaseViewModel.BaseViewIntent,
+        State : BaseViewModel.BaseViewState,
+        Effect : BaseViewModel.BaseViewEffect,
+        DomainModel : Any
         > : ViewModel() {
 
+    protected abstract fun domainModelFlow(): MutableStateFlow<GenericResultFlow<DomainModel>>
     protected abstract fun initialState(): State
     abstract fun intent(intent: Intent)
 
@@ -38,6 +40,21 @@ abstract class BaseMviViewModel<
         val effectValue = builder()
         viewModelScope.launch { _viewEffect.emit(effectValue) }
     }
+
+    protected fun setCollector() = viewModelScope.launch {
+        domainModelFlow().collect {
+            when (it) {
+                is GenericResultFlow.Error -> domainError()
+                is GenericResultFlow.Loading -> domainLoading()
+                is GenericResultFlow.Success -> domainSuccess(it.data)
+            }
+        }
+    }
+
+
+    abstract fun domainSuccess(domainModel: DomainModel)
+    abstract fun domainError(error: Throwable? = null)
+    abstract fun domainLoading()
 
     interface BaseViewState
     interface BaseViewEffect
