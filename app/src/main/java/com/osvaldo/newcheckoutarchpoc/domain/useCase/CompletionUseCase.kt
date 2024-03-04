@@ -1,8 +1,8 @@
 package com.osvaldo.newcheckoutarchpoc.domain.useCase
 
 import com.osvaldo.newcheckoutarchpoc.core.CoroutineContextProvider
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.model.CompletionModel
-import com.osvaldo.newcheckoutarchpoc.domain.model.GenericResultFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 
@@ -26,7 +26,7 @@ class CompletionUseCase(
      * The Presentation layer should collect this flow and update the UI accordingly
      */
     val completion: MutableStateFlow<GenericResultFlow<CompletionModel>> =
-        MutableStateFlow(GenericResultFlow.Success(completionModel))
+        MutableStateFlow(GenericResultFlow.Loading())
 
     /**
      * Updates if the condiment is ready

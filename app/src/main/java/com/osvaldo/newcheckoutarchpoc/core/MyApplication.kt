@@ -12,6 +12,7 @@ import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.CompletionViewModel
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.CondimentsViewModel
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.FishViewModel
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.MeatViewModel
+import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.PriceViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -45,6 +46,7 @@ class MyApplication : Application() {
         viewModel { MeatViewModel(get(), get()) }
         viewModel { FishViewModel(get(), get()) }
         viewModel { CompletionViewModel(get()) }
+        viewModel { PriceViewModel(get()) }
     }
 
 }

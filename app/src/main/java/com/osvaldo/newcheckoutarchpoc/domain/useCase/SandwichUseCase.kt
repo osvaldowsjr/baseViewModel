@@ -6,7 +6,7 @@ import com.osvaldo.newcheckoutarchpoc.data.model.repo.SandwichModel
 import com.osvaldo.newcheckoutarchpoc.data.model.repo.SandwichRequest
 import com.osvaldo.newcheckoutarchpoc.data.repository.SandwichRepository
 import com.osvaldo.newcheckoutarchpoc.domain.mapper.SandwichModelMapper
-import com.osvaldo.newcheckoutarchpoc.domain.model.GenericResultFlow
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.model.SandwichDomainModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow

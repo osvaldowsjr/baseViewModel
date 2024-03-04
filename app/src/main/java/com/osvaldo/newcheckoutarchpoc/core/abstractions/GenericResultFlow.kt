@@ -1,4 +1,4 @@
-package com.osvaldo.newcheckoutarchpoc.domain.model
+package com.osvaldo.newcheckoutarchpoc.core.abstractions
 
 sealed class GenericResultFlow<T> {
     data class Success<T>(val data: T) : GenericResultFlow<T>()

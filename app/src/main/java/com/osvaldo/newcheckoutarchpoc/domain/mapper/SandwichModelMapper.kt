@@ -10,7 +10,8 @@ class SandwichModelMapper {
             bread = sandwichModel.bread,
             condiments = sandwichModel.condiments,
             meat = sandwichModel.meat,
-            fish = sandwichModel.fish
+            fish = sandwichModel.fish,
+            price = sandwichModel.price
         )
     }
 }

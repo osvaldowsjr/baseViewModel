@@ -3,32 +3,22 @@ package com.osvaldo.newcheckoutarchpoc.core.abstractions
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.osvaldo.newcheckoutarchpoc.domain.model.GenericResultFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<
-        Intent : BaseViewModel.BaseViewIntent,
-        State : BaseViewModel.BaseViewState,
-        Effect : BaseViewModel.BaseViewEffect,
-        DomainModel : Any
+abstract class BaseMviViewModel<
+        Intent : BaseMviViewModel.BaseViewIntent,
+        State : BaseMviViewModel.BaseViewState,
+        Effect : BaseMviViewModel.BaseViewEffect,
         > : ViewModel() {
-
-    private val domainFlow: MutableStateFlow<GenericResultFlow<DomainModel>> by lazy { domainFlow() }
-
-    protected abstract fun domainFlow(): MutableStateFlow<GenericResultFlow<DomainModel>>
-
-    init {
-        setCollector(domainFlow)
-    }
 
     protected abstract fun initialState(): State
     abstract fun intent(intent: Intent)
-    private val initialState: State by lazy { initialState() }
 
+    private val initialState: State by lazy { initialState() }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val currentState: State
@@ -48,21 +38,6 @@ abstract class BaseViewModel<
         val effectValue = builder()
         viewModelScope.launch { _viewEffect.emit(effectValue) }
     }
-
-    private fun setCollector(flow: MutableStateFlow<GenericResultFlow<DomainModel>>) =
-        viewModelScope.launch {
-            flow.collect {
-                when (it) {
-                    is GenericResultFlow.Error -> domainError()
-                    is GenericResultFlow.Loading -> domainLoading()
-                    is GenericResultFlow.Success -> domainSuccess(it.data)
-                }
-            }
-        }
-
-    abstract fun domainSuccess(domainModel: DomainModel)
-    abstract fun domainError(error: Throwable? = null)
-    abstract fun domainLoading()
 
     interface BaseViewState
     interface BaseViewEffect

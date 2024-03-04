@@ -4,5 +4,6 @@ data class SandwichDomainModel(
     val bread: String?,
     val condiments: String?,
     val meat: String?,
-    val fish: String?
+    val fish: String?,
+    val price: Double?
 )

@@ -1,19 +1,15 @@
 package com.osvaldo.newcheckoutarchpoc.presentation.viewModel
 
-import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseViewModel
+import androidx.lifecycle.viewModelScope
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.BaseMviViewModel
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.model.CompletionModel
-import com.osvaldo.newcheckoutarchpoc.domain.model.GenericResultFlow
 import com.osvaldo.newcheckoutarchpoc.domain.useCase.CompletionUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class CompletionViewModel(
     private val completionUseCase: CompletionUseCase
-) : BaseViewModel<
-        CompletionViewModel.ViewIntent,
-        CompletionViewModel.ViewState,
-        CompletionViewModel.ViewEffect,
-        CompletionModel
-        >() {
+) : BaseMviViewModel<CompletionViewModel.ViewIntent, CompletionViewModel.ViewState, CompletionViewModel.ViewEffect>() {
 
     /**
      * This is the model that will be used to check if the condiment, meat and fish are ready
@@ -24,19 +20,26 @@ class CompletionViewModel(
         isCondimentReady = false, isMeatReady = false, isFishReady = false
     )
 
-    override fun domainFlow(): MutableStateFlow<GenericResultFlow<CompletionModel>> =
-        completionUseCase.completion
-
-    override fun domainError(error: Throwable?) {
-        setEffect { ViewEffect.ShowError }
+    init {
+        setCompletionUseCaseCollector()
     }
 
-    override fun domainLoading() {
-        setEffect { ViewEffect.ShowLoading }
-    }
+    /**
+     * This function is responsible for collecting the completion data from the use case
+     * and updating the view state accordingly
+     */
+    private fun setCompletionUseCaseCollector() = viewModelScope.launch {
+        completionUseCase.completion.collect {
+            when (it) {
+                is GenericResultFlow.Success -> {
+                    updateButtonState(it.data)
+                }
 
-    override fun domainSuccess(domainModel: CompletionModel) {
-        updateButtonState(domainModel)
+                else -> {
+                    // Do nothing
+                }
+            }
+        }
     }
 
     /**
@@ -71,7 +74,6 @@ class CompletionViewModel(
     sealed class ViewEffect : BaseViewEffect {
         data object GoToNextScreen : ViewEffect()
         data object ShowError : ViewEffect()
-        data object ShowLoading : ViewEffect()
     }
 
     data class ViewState(
@@ -79,7 +81,6 @@ class CompletionViewModel(
     ) : BaseViewState
 
     override fun initialState() = ViewState()
-
 
     override fun intent(intent: ViewIntent) {
         when (intent) {

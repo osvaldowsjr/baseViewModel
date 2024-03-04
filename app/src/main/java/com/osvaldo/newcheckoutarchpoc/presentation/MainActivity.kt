@@ -24,6 +24,7 @@ import com.osvaldo.newcheckoutarchpoc.presentation.composes.BreadComposable
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.CondimentsComposable
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.FishComposable
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.MeatComposable
+import com.osvaldo.newcheckoutarchpoc.presentation.composes.PriceComposable
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.CompletionViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -80,9 +81,18 @@ class MainActivity : ComponentActivity() {
                                 FishComposable()
                             }
                         }
+                        item {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                            ) {
+                                PriceComposable()
+                            }
+                        }
 
                         item {
-                            Spacer(modifier = Modifier.padding(20.dp))
+                            Spacer(modifier = Modifier.padding(15.dp))
                         }
                     }
 
@@ -113,14 +123,6 @@ class MainActivity : ComponentActivity() {
                                     Toast.makeText(
                                         this@MainActivity,
                                         "Peixe não está pronto!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-
-                                CompletionViewModel.ViewEffect.ShowLoading -> {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "Loading...",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
