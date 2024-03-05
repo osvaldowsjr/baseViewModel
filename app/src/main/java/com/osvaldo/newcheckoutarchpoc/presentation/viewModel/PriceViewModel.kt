@@ -12,10 +12,6 @@ class PriceViewModel(
 ) : BaseViewModel<PriceViewModel.ViewIntent, PriceViewModel.ViewState, PriceViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 

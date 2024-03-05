@@ -18,10 +18,6 @@ class MeatViewModel(
 ) : BaseViewModel<MeatViewModel.ViewIntent, MeatViewModel.ViewState, MeatViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     override fun intent(intent: ViewIntent) {
         when (intent) {
             is ViewIntent.UpdateMeatStatus -> {

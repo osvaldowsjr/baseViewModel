@@ -18,10 +18,6 @@ class FishViewModel(
 ) : BaseViewModel<FishViewModel.ViewIntent, FishViewModel.ViewState, FishViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     private fun updateFishStatus(done: Boolean) = viewModelScope.launch {
         setState { copy(viewData = viewData.copy(isDone = done)) }
         completionUseCase.updateFishReady(done)

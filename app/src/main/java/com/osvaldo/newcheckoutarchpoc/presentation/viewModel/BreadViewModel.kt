@@ -16,10 +16,6 @@ class BreadViewModel(
 ) : BaseViewModel<BreadViewModel.ViewIntent, BreadViewModel.ViewState, BreadViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     private fun updateBread() = viewModelScope.launch {
         sandwichUseCase.updateBread()
     }

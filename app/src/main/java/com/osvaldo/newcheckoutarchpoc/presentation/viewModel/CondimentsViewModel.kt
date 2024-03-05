@@ -17,10 +17,6 @@ class CondimentsViewModel(
 ) : BaseViewModel<CondimentsViewModel.ViewIntent, CondimentsViewModel.ViewState, CondimentsViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     override fun intent(intent: ViewIntent) {
         when (intent) {
             is ViewIntent.UpdateCondimentStatus -> isCondimentDone(intent.isDone)

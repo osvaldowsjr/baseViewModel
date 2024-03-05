@@ -24,10 +24,6 @@ class CompletionViewModel(
         isCondimentReady = false, isMeatReady = false, isFishReady = false
     )
 
-    init {
-        setCollector()
-    }
-
     /**
      * This function is responsible for updating the view state according to the completion data
      * And updating the button state
