@@ -13,10 +13,10 @@ abstract class BaseViewModel<
         Intent : BaseViewModel.BaseViewIntent,
         State : BaseViewModel.BaseViewState,
         Effect : BaseViewModel.BaseViewEffect,
-        DomainModel : Any
+        UseCaseModel : Any
         > : ViewModel() {
 
-    protected abstract fun domainModelFlow(): MutableStateFlow<GenericResultFlow<DomainModel>>
+    protected abstract fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<UseCaseModel>>
     protected abstract fun initialState(): State
     abstract fun intent(intent: Intent)
 
@@ -41,20 +41,19 @@ abstract class BaseViewModel<
         viewModelScope.launch { _viewEffect.emit(effectValue) }
     }
 
-    fun setCollector() = viewModelScope.launch {
-        domainModelFlow().collect {
+    fun setUseCaseModelFlowCollector() = viewModelScope.launch {
+        useCaseModelFlow().collect {
             when (it) {
-                is GenericResultFlow.Error -> domainError()
-                is GenericResultFlow.Loading -> domainLoading()
-                is GenericResultFlow.Success -> domainSuccess(it.data)
+                is GenericResultFlow.Error -> useCaseError()
+                is GenericResultFlow.Loading -> useCaseLoading()
+                is GenericResultFlow.Success -> useCaseSuccess(it.data)
             }
         }
     }
 
-
-    abstract fun domainSuccess(domainModel: DomainModel)
-    abstract fun domainError(error: Throwable? = null)
-    abstract fun domainLoading()
+    abstract fun useCaseSuccess(useCaseModel: UseCaseModel)
+    abstract fun useCaseError(error: Throwable? = null)
+    abstract fun useCaseLoading()
 
     interface BaseViewState
     interface BaseViewEffect

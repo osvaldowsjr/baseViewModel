@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-inline fun <reified ViewModelType : ViewModel> injectViewModelWithCollector(): ViewModelType {
+inline fun <reified ViewModelType : ViewModel> injectCollector(): ViewModelType {
     val viewModel = koinViewModel<ViewModelType>()
     if (viewModel is BaseViewModel<*, *, *, *>) {
-        viewModel.setCollector()
+        viewModel.setUseCaseModelFlowCollector()
     }
     return viewModel
 }

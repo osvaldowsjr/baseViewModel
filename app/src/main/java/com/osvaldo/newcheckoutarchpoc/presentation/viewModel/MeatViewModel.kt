@@ -31,11 +31,11 @@ class MeatViewModel(
         completionUseCase.updateMeatReady(done)
     }
 
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 
     override fun initialState(): ViewState = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         setState {
             copy(
                 meatViewData = meatViewData.copy(
@@ -45,7 +45,7 @@ class MeatViewModel(
         }
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         setState {
             copy(
                 meatViewData = meatViewData.copy(
@@ -55,12 +55,12 @@ class MeatViewModel(
         }
     }
 
-    override fun domainSuccess(domainModel: SandwichDomainModel) {
+    override fun useCaseSuccess(useCaseModel: SandwichDomainModel) {
         setState {
             copy(
                 meatViewData = meatViewData.copy(
                     componentState = ComponentState.SUCCESS,
-                    meat = domainModel.meat ?: "",
+                    meat = useCaseModel.meat ?: "",
                     isGrilled = Factories.booleanFactory.random()
                 )
             )
