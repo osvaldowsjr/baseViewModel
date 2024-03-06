@@ -17,10 +17,6 @@ class CondimentsViewModel(
 ) : BaseViewModel<CondimentsViewModel.ViewIntent, CondimentsViewModel.ViewState, CondimentsViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     override fun intent(intent: ViewIntent) {
         when (intent) {
             is ViewIntent.UpdateCondimentStatus -> isCondimentDone(intent.isDone)
@@ -46,12 +42,12 @@ class CondimentsViewModel(
         completionUseCase.updateCondimentReady(isDone)
     }
 
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 
 
     override fun initialState() = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -62,7 +58,7 @@ class CondimentsViewModel(
         }
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -73,12 +69,12 @@ class CondimentsViewModel(
         }
     }
 
-    override fun domainSuccess(domainModel: SandwichDomainModel) {
+    override fun useCaseSuccess(useCaseModel: SandwichDomainModel) {
         setState {
             copy(
                 viewData = viewData.copy(
                     componentState = ComponentState.SUCCESS,
-                    condiment = domainModel.condiments ?: "",
+                    condiment = useCaseModel.condiments ?: "",
                 )
             )
         }

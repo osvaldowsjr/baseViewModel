@@ -18,10 +18,6 @@ class FishViewModel(
 ) : BaseViewModel<FishViewModel.ViewIntent, FishViewModel.ViewState, FishViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     private fun updateFishStatus(done: Boolean) = viewModelScope.launch {
         setState { copy(viewData = viewData.copy(isDone = done)) }
         completionUseCase.updateFishReady(done)
@@ -38,11 +34,11 @@ class FishViewModel(
 
     sealed class ViewEffect : BaseViewEffect
 
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 
     override fun initialState(): ViewState = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -52,7 +48,7 @@ class FishViewModel(
         }
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -62,12 +58,12 @@ class FishViewModel(
         }
     }
 
-    override fun domainSuccess(domainModel: SandwichDomainModel) {
+    override fun useCaseSuccess(useCaseModel: SandwichDomainModel) {
         setState {
             copy(
                 viewData = viewData.copy(
                     componentState = ComponentState.SUCCESS,
-                    fish = domainModel.fish ?: "",
+                    fish = useCaseModel.fish ?: "",
                     isGrilled = Factories.booleanFactory.random(),
                 )
             )

@@ -14,14 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.injectCollector
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.ErrorView
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.LoadingView
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.FishViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FishComposable(viewModel: FishViewModel = koinViewModel()) {
+fun FishComposable(viewModel: FishViewModel = injectCollector<FishViewModel>()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

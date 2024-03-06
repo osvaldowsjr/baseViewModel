@@ -12,15 +12,11 @@ class PriceViewModel(
 ) : BaseViewModel<PriceViewModel.ViewIntent, PriceViewModel.ViewState, PriceViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 
     override fun initialState(): ViewState = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         setState {
             copy(
                 componentState = ComponentState.ERROR
@@ -28,7 +24,7 @@ class PriceViewModel(
         }
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         setState {
             copy(
                 componentState = ComponentState.LOADING
@@ -36,11 +32,11 @@ class PriceViewModel(
         }
     }
 
-    override fun domainSuccess(domainModel: SandwichDomainModel) {
+    override fun useCaseSuccess(useCaseModel: SandwichDomainModel) {
         setState {
             copy(
                 componentState = ComponentState.SUCCESS,
-                price = domainModel.price.toString()
+                price = useCaseModel.price.toString()
             )
         }
     }

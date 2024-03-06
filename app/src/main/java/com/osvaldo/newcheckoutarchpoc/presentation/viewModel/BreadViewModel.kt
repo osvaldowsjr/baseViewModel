@@ -16,10 +16,6 @@ class BreadViewModel(
 ) : BaseViewModel<BreadViewModel.ViewIntent, BreadViewModel.ViewState, BreadViewModel.ViewEffect,
         SandwichDomainModel>() {
 
-    init {
-        setCollector()
-    }
-
     private fun updateBread() = viewModelScope.launch {
         sandwichUseCase.updateBread()
     }
@@ -32,12 +28,12 @@ class BreadViewModel(
         }
     }
 
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<SandwichDomainModel>> =
         sandwichUseCase.sandwich
 
 
     override fun initialState() = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -47,7 +43,7 @@ class BreadViewModel(
         }
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         setState {
             copy(
                 viewData = viewData.copy(
@@ -57,12 +53,12 @@ class BreadViewModel(
         }
     }
 
-    override fun domainSuccess(domainModel: SandwichDomainModel) {
+    override fun useCaseSuccess(useCaseModel: SandwichDomainModel) {
         setState {
             copy(
                 viewData = viewData.copy(
                     componentState = ComponentState.SUCCESS,
-                    bread = domainModel.bread ?: "",
+                    bread = useCaseModel.bread ?: "",
                     isGlutenFree = Factories.booleanFactory.random(),
                     isVegan = Factories.booleanFactory.random()
                 )

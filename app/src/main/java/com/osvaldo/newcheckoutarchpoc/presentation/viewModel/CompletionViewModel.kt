@@ -24,10 +24,6 @@ class CompletionViewModel(
         isCondimentReady = false, isMeatReady = false, isFishReady = false
     )
 
-    init {
-        setCollector()
-    }
-
     /**
      * This function is responsible for updating the view state according to the completion data
      * And updating the button state
@@ -66,20 +62,20 @@ class CompletionViewModel(
         val buttonEnabled: Boolean = false
     ) : BaseViewState
 
-    override fun domainModelFlow(): MutableStateFlow<GenericResultFlow<CompletionModel>> =
+    override fun useCaseModelFlow(): MutableStateFlow<GenericResultFlow<CompletionModel>> =
         completionUseCase.completion
 
     override fun initialState() = ViewState()
-    override fun domainError(error: Throwable?) {
+    override fun useCaseError(error: Throwable?) {
         // Do nothing
     }
 
-    override fun domainLoading() {
+    override fun useCaseLoading() {
         // Do nothing
     }
 
-    override fun domainSuccess(domainModel: CompletionModel) {
-        updateButtonState(domainModel)
+    override fun useCaseSuccess(useCaseModel: CompletionModel) {
+        updateButtonState(useCaseModel)
     }
 
     override fun intent(intent: ViewIntent) {

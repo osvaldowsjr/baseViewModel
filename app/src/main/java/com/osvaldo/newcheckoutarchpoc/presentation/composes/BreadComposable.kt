@@ -12,14 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.injectCollector
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.ErrorView
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.LoadingView
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.BreadViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun BreadComposable(viewModel: BreadViewModel = koinViewModel()) {
+fun BreadComposable(viewModel: BreadViewModel = injectCollector<BreadViewModel>()) {
     Column(
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
