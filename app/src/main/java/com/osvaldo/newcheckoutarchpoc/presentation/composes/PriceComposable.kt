@@ -13,14 +13,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.osvaldo.newcheckoutarchpoc.core.abstractions.koinBaseViewModel
+import com.osvaldo.newcheckoutarchpoc.core.abstractions.injectViewModelWithCollector
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.ErrorView
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.LoadingView
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.PriceViewModel
 
 @Composable
-fun PriceComposable(viewModel: PriceViewModel = koinBaseViewModel<PriceViewModel>()) {
+fun PriceComposable(viewModel: PriceViewModel = injectViewModelWithCollector<PriceViewModel>()) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
