@@ -18,7 +18,6 @@ import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.ErrorView
 import com.osvaldo.newcheckoutarchpoc.presentation.composes.generic.LoadingView
 import com.osvaldo.newcheckoutarchpoc.presentation.model.ComponentState
 import com.osvaldo.newcheckoutarchpoc.presentation.viewModel.PriceViewModel
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PriceComposable(viewModel: PriceViewModel = koinBaseViewModel<PriceViewModel>()) {
